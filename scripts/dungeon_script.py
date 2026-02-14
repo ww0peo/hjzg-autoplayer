@@ -5,7 +5,7 @@
 """
 
 from .base_script import BaseScript
-from game_utils import get_pos_by_name, click_pos, pick_up_items
+from game_utils import get_pos_by_name, click_pos, pick_up_items, press_a
 
 
 class DungeonScript(BaseScript):
@@ -23,22 +23,12 @@ class DungeonScript(BaseScript):
             # 步骤1: 前往传送门
             self.log("\n[步骤1] 前往传送门...", "INFO")
             portal2_xy = get_pos_by_name(self.detector, 'portal2')
-            if portal2_xy and self.is_running:
+            button1_xy = self.detector.get_center_by_name(name='button1')
+            while not button1_xy and self.is_running:
                 click_pos(portal2_xy, click_type='double', duration=0.3, game_input=self.game_input)
                 if not self.sleep(1):
                     return False
-
-                # 等待到达传送门
                 button1_xy = self.detector.get_center_by_name(name='button1')
-                retry_count = 0
-                while not button1_xy and retry_count < 10 and self.is_running:
-                    self.log(f"等待到达传送门... (尝试 {retry_count + 1}/10)", "DEBUG")
-                    portal2_xy = get_pos_by_name(self.detector, 'portal2')
-                    click_pos(portal2_xy, click_type='double', duration=0.3, game_input=self.game_input)
-                    if not self.sleep(2):
-                        return False
-                    button1_xy = self.detector.get_center_by_name(name='button1')
-                    retry_count += 1
 
             # 步骤2: 进入传送门
             self.log("\n[步骤2] 进入传送门...", "INFO")
@@ -47,7 +37,7 @@ class DungeonScript(BaseScript):
                 click_pos(button1_xy, click_type='double', game_input=self.game_input)
                 if not self.sleep(1):
                     return False
-                button1_xy = get_pos_by_name(self.detector, 'button1')
+                button1_xy = self.detector.get_center_by_name(name='button1')
 
             dungeon_xy = get_pos_by_name(self.detector, 'dungeon')
             if dungeon_xy and self.is_running:
@@ -94,17 +84,22 @@ class DungeonScript(BaseScript):
                 if not self.sleep(1):
                     return False
 
-            portal1_xy = get_pos_by_name(self.detector, 'portal1')
-            while portal1_xy and self.is_running:
-                click_pos((portal1_xy[0], portal1_xy[1] + 40), click_type='double', duration=0.3, game_input=self.game_input)
-                if not self.sleep(1):
-                    return False
-                button2_xy = self.detector.get_center_by_name(name='button2')
-                if button2_xy and self.is_running:
-                    click_pos(button2_xy, click_type='double', game_input=self.game_input)
-                    if not self.sleep(1):
-                        return False
-                    
+            portal2_xy = self.detector.get_center_by_name(name='portal2')
+            while not portal2_xy and self.is_running:
+                portal1_xy = self.detector.get_center_by_name(name='portal1')
+                press_a()
+                self.log(f"点击传送门: {portal1_xy}", "INFO")
+                if portal1_xy and self.is_running:
+                    click_pos((portal1_xy[0], portal1_xy[1] + 100), click_type='double', duration=0.3, game_input=self.game_input)
+                    for _ in range(2):
+                        if not self.sleep(0.1):
+                            return False
+                        button2_xy = self.detector.get_center_by_name(name='button2')
+                        self.log(f"检测到按钮2位置: {button2_xy}", "INFO")
+                        if button2_xy and self.is_running:
+                            click_pos(button2_xy, click_type='double', game_input=self.game_input)
+                            self.log("点击了按钮2", "INFO")
+                portal2_xy = self.detector.get_center_by_name(name='portal2')
             return True
 
         except Exception as e:

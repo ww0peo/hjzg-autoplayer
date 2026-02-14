@@ -65,7 +65,7 @@ def press_a():
     """使用A键拾取物品"""
     for _ in range(5):
         pyautogui.press('a')
-        sleep(0.5)
+        sleep(0.1)
 
 
 def pick_up_items(detector, name, game_input=None):
