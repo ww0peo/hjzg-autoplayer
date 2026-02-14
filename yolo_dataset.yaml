@@ -1,0 +1,18 @@
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: hjzg # dataset root dir
+train: images/train # train images (relative to 'path') 1052 images
+val: images/val # val images (relative to 'path') 225 images
+test: # test images (relative to 'path') 227 images
+
+# Classes
+names:
+  0: person
+  1: portal1
+  2: portal2
+  3: button1
+  4: button2
+  5: dungeon
+  6: startButton
+  7: boss
+  8: monster
+  9: props
