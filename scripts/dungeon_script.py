@@ -24,7 +24,7 @@ class DungeonScript(BaseScript):
             self.log("\n[步骤1] 前往传送门...", "INFO")
             portal2_xy = get_pos_by_name(self.detector, 'portal2')
             if portal2_xy and self.is_running:
-                click_pos(portal2_xy, click_type='double', duration=0.3)
+                click_pos(portal2_xy, click_type='double', duration=0.3, game_input=self.game_input)
                 if not self.sleep(1):
                     return False
 
@@ -34,7 +34,7 @@ class DungeonScript(BaseScript):
                 while not button1_xy and retry_count < 10 and self.is_running:
                     self.log(f"等待到达传送门... (尝试 {retry_count + 1}/10)", "DEBUG")
                     portal2_xy = get_pos_by_name(self.detector, 'portal2')
-                    click_pos(portal2_xy, click_type='double', duration=0.3)
+                    click_pos(portal2_xy, click_type='double', duration=0.3, game_input=self.game_input)
                     if not self.sleep(2):
                         return False
                     button1_xy = self.detector.get_center_by_name(name='button1')
@@ -44,19 +44,19 @@ class DungeonScript(BaseScript):
             self.log("\n[步骤2] 进入传送门...", "INFO")
             button1_xy = get_pos_by_name(self.detector, 'button1')
             if button1_xy and self.is_running:
-                click_pos(button1_xy, click_type='single')
+                click_pos(button1_xy, click_type='single', game_input=self.game_input)
                 if not self.sleep(1):
                     return False
 
             dungeon_xy = get_pos_by_name(self.detector, 'dungeon')
             if dungeon_xy and self.is_running:
-                click_pos(dungeon_xy, click_type='single')
+                click_pos(dungeon_xy, click_type='single', game_input=self.game_input)
                 if not self.sleep(1):
                     return False
 
             startButton_xy = get_pos_by_name(self.detector, 'startButton')
             if startButton_xy and self.is_running:
-                click_pos(startButton_xy, click_type='single')
+                click_pos(startButton_xy, click_type='single', game_input=self.game_input)
                 if not self.sleep(2):
                     return False
 
@@ -75,7 +75,7 @@ class DungeonScript(BaseScript):
                 self.game_input.move_mouse(screen_center[0], screen_center[1])
                 if not self.sleep(0.2):
                     return False
-                self.game_input.right_click()
+                self.game_input.click(button ='right')
                 self.log(f"右键闪现到: {screen_center}", "DEBUG")
                 if not self.sleep(3):
                     return False
@@ -84,24 +84,24 @@ class DungeonScript(BaseScript):
             self.log("\n[步骤4] 拾取物品并退出副本...", "INFO")
             portal1_xy = get_pos_by_name(self.detector, 'portal1')
             if portal1_xy and self.is_running:
-                pick_up_items(self.detector, 'props')
+                pick_up_items(self.detector, 'props', game_input=self.game_input)
                 if not self.sleep(1):
                     return False
 
                 portal1_xy = get_pos_by_name(self.detector, 'portal1')
-                click_pos(portal1_xy, click_type='double', duration=0.3)
+                click_pos(portal1_xy, click_type='double', duration=0.3, game_input=self.game_input)
                 if not self.sleep(1):
                     return False
 
             button2_xy = self.detector.get_center_by_name(name='button2')
             while not button2_xy and self.is_running:
                 portal1_xy = get_pos_by_name(self.detector, 'portal1')
-                click_pos((portal1_xy[0], portal1_xy[1] + 20), click_type='double', duration=0.3)
+                click_pos((portal1_xy[0], portal1_xy[1] + 20), click_type='double', duration=0.3, game_input=self.game_input)
                 if not self.sleep(1):
                     return False
                 button2_xy = self.detector.get_center_by_name(name='button2')
                 if button2_xy and self.is_running:
-                    click_pos(button2_xy, click_type='single')
+                    click_pos(button2_xy, click_type='single', game_input=self.game_input)
                     if not self.sleep(1):
                         return False
                     

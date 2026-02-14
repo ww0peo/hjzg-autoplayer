@@ -112,7 +112,7 @@ def click_pos(pos, click_type='single', duration=0.2, use_api=True, game_input=N
         if click_type == 'double':
             game_input.double_click()
         elif click_type == 'right':
-            game_input.right_click()
+            game_input.click(button="right")
         else:
             game_input.click()
     else:

@@ -3,6 +3,24 @@ import numpy as np
 from PIL import ImageGrab
 import cv2
 from typing import Optional, Tuple, List, Dict
+import os
+import sys
+import urllib3
+
+# 禁用 SSL 警告和验证
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+os.environ['CURL_CA_BUNDLE'] = ''
+os.environ['REQUESTS_CA_BUNDLE'] = ''
+
+def get_resource_path(relative_path):
+    """获取资源文件的绝对路径，支持打包后的环境"""
+    try:
+        # PyInstaller 创建临时文件夹，将路径存储在 _MEIPASS 中
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class ScreenDetector:
     """
@@ -22,6 +40,13 @@ class ScreenDetector:
             model_path: YOLO模型路径
             conf: 置信度阈值
         """
+        # 禁用 SSL 验证
+        import ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
+
+        # 获取模型文件的正确路径（支持打包后的环境）
+        model_path = get_resource_path(model_path)
+
         self.model = YOLO(model_path)
         self.conf = conf
         self.class_names = self.model.names  # 获取类别名称
