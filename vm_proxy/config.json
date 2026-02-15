@@ -1,0 +1,7 @@
+{
+  "vm_host": "192.168.1.100",
+  "vm_port": 8765,
+  "model_path": "hjzgv1.pt",
+  "conf_threshold": 0.5,
+  "window_title": "Torchlight: Infinite"
+}
